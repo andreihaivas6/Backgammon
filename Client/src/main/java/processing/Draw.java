@@ -13,9 +13,18 @@ public class Draw {
         processing.background(Main.COLOR_BACKGROUND);
         processing.line(0, 0, processing.width, 0);
 
-        switch (Main.currentScreen) {
-            case 1 -> menu();
-            case 2 -> game();
+        if(Main.gameOver) {
+            processing.fill(0);
+            if(Main.winner) {
+                processing.text("You won!", 300, 300);
+            } else {
+                processing.text("You lost!", 300, 300);
+            }
+        } else {
+            switch (Main.currentScreen) {
+                case 1 -> menu();
+                case 2 -> game();
+            }
         }
     }
 
@@ -49,12 +58,14 @@ public class Draw {
                 Main.currentScreen = 2;
                 Main.wait = true;
                 Main.indexPlayer = 0;
+                Main.gameScreen.getBoard().initBoard();
                 break;
             case "Joined Room":
                 Main.currentScreen = 2;
                 Main.started = true;
                 Main.wait = true;
                 Main.indexPlayer = 1;
+                Main.gameScreen.getBoard().initBoard();
                 break;
 //            default: // vs C
 //                Main.currentScreen = 2;
@@ -78,36 +89,97 @@ public class Draw {
                 break;
             case "Press":
                 if(!Main.diceRolled && !Main.wait) { //////////////////////////////////////////////////////////////////////// !!!Main.wait
-                    ((GameScreen) Main.gameScreen).rollDices();
+                    Main.gameScreen.rollDices();
                     Main.diceRolled = true;
-                    Main.sendRequest("update\\dice " + ((GameScreen) Main.gameScreen).getDice1().getValoare()
-                            + " " + ((GameScreen) Main.gameScreen).getDice2().getValoare());
+                    Main.sendRequest("update/dice " + Main.gameScreen.getDice1().getValoare()
+                            + " " + Main.gameScreen.getDice2().getValoare());
                 }
                 break;
             default:
-                String response = Main.sendRequest("Game status");
-                manageResponse(response);
-                System.out.println("W: " + Main.wait);
-                if (!Main.wait) {
+                if(Main.wait) {
+                    String response = Main.sendRequest("Game status/" + Main.indexPlayer);
+                    manageResponse(response);
+                } else {
                     gameLogic();
                 }
         }
     }
 
     private static void gameLogic() throws IOException, InterruptedException { // player current
-        if(!(Main.gameScreen instanceof GameScreen)) {
+        if(!Main.diceRolled) {
             return;
         }
+        DrawUtil.init(Main.gameScreen, Main.gameScreen.getDice1().getValoare(),
+                Main.gameScreen.getDice2().getValoare(), Main.indexPlayer);
 
-
+        if(Main.triangleClicked != -1) {
+            if (Main.indexPlayer == 0) {
+                processing.image(Main.gameScreen.getBoard().getTriangles().get(0).getImgPieceWhite(),
+                        processing.mouseX - 35, processing.mouseY - 35, 70, 70);
+            } else {
+                processing.image(Main.gameScreen.getBoard().getTriangles().get(0).getImgPieceBlack(),
+                        processing.mouseX - 35, processing.mouseY - 35, 70, 70);
+            }
+        }
+        if(DrawUtil.aiPiesaMancata()) {
+            if(DrawUtil.aiLocSaPuiPiesaMancata()) {
+                if(DrawUtil.selecteazaPiesaMancata()) {;
+//                    DrawUtil.punePiesaMancata();
+                }
+            } else {
+                DrawUtil.schimbaJucator();
+            }
+        } else { // nu ai piesa mancata
+            if(Main.casaPlina) { // incepi sa scoti
+                if(DrawUtil.aiZarBunPentruAScoate()) {
+                    if(DrawUtil.selecteazaPiesa()) {;
+//                        DrawUtil.scoatePiesa();
+                    }
+                } else {
+                    if(DrawUtil.potiMutaPiesa()) {
+                        if (DrawUtil.selecteazaPiesa()) {;
+//                            DrawUtil.mutaPiesa();
+                        }
+                    } else {
+                        DrawUtil.schimbaJucator();
+                    }
+                }
+            } else {
+                if(DrawUtil.potiMutaPiesa() /*&& Main.triangleClicked != -1*/) {
+                    if(DrawUtil.selecteazaPiesa()) {;
+//                        DrawUtil.mutaPiesa();
+                    }
+                }else {
+                    DrawUtil.schimbaJucator();
+                }
+            }
+        }
     }
 
     private static void manageResponse(String response) {
-        switch (response) {
-            case "start":
-                Main.wait = false;
-                break;
-            default: break;
+        if(response.equals("start")) {
+            Main.wait = false;
+            Main.diceRolled = false;
+        } else if(response.startsWith("dice ")) {
+            int valoare1 = Integer.parseInt(response.split(" ")[1]);
+            int valoare2 = Integer.parseInt(response.split(" ")[2]);
+            Main.gameScreen.getDice1().setValoare(valoare1);
+            Main.gameScreen.getDice2().setValoare(valoare2);
+            System.out.println("update la zar");
+        } else if(response.startsWith("move ")) {
+            int position1 = Integer.parseInt(response.split(" ")[1]);
+            int position2 = Integer.parseInt(response.split(" ")[2]);
+            Main.gameScreen.getBoard().movePiece(position1, position2);
+        } else if(response.startsWith("out ")) {
+            int position = Integer.parseInt(response.split(" ")[1]);
+            Main.gameScreen.getBoard().getTriangles().get(position).minusOnePiece();
+        } else if(response.equals("over")) {
+            Main.gameOver = true;
+        }
+        if(response.endsWith("end")) {
+            Main.wait = false;
+            Main.diceRolled = false;
         }
     }
+
 }

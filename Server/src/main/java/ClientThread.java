@@ -55,7 +55,7 @@ class ClientThread extends Thread {
             case "PvC Hard" -> pvcHard();
             case "Exit" -> myExit();
             case "Quit" -> myQuit();
-            case "Game status" -> status();
+            case "Game status" -> status(arg);
             case "update" -> update(arg);
             default -> "Bad request";
         };
@@ -95,15 +95,22 @@ class ClientThread extends Thread {
         return "quit";
     }
 
-    private String status() {
-        if(currentRoom.getPlayer2() == null || currentUser.getIndex() != currentRoom.getTurn()) {
+    private String status(String turn) {
+        if(currentRoom.getPlayer2() == null/* || currentRoom.getTurn() != Integer.parseInt(turn)*/) {
             return "wait";
         }
+//        } else if(currentUser.getIndex() != currentRoom.getTurn()) {
+//            return "wait " + currentRoom.getMessage();
+//        }
         return currentRoom.getMessage();
     }
 
     private String update(String request) {
+        System.out.println("Set message: " + request);
         currentRoom.setMessage(request);
+        if(request.endsWith("end")) {
+            currentRoom.changeTurn();
+        }
         return "Succesful update";
     }
 

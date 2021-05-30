@@ -2,6 +2,8 @@ package processing;
 
 import item.Label;
 import processing.core.PApplet;
+import screen.GameScreen;
+import screen.MenuScreen;
 import screen.Screen;
 
 import java.awt.*;
@@ -14,7 +16,7 @@ import java.net.Socket;
 import static java.lang.Thread.sleep;
 
 // mvn package
-// java -jar Client-1.0-SNAPSHOT.jar
+// java -jar target/Client-1.0-SNAPSHOT.jar
 
 public class Main extends PApplet {
     public static PApplet processing;
@@ -35,11 +37,16 @@ public class Main extends PApplet {
     public static final int COLOR_BUTTON = Color.red.getRGB();
     public static final int COLOR_BUTTON_PRESSED = 255;
 
-    public static Screen menuScreen, gameScreen;
+    public static GameScreen gameScreen;
+    public static MenuScreen menuScreen;
     public static Label info;
 
     public static int currentScreen = 1, indexPlayer;
-    public static boolean started = false, wait = true, diceRolled = false;
+    public static boolean started = false, wait = true, diceRolled = false, casaPlina = false;
+    public static boolean gameOver = false, winner = false;
+    public static int triangleClicked = -1;
+    
+    public static boolean exampleHome = false;
 
     public static void main(String[] args) {
         PApplet.main("processing.Main", args);
@@ -89,6 +96,25 @@ public class Main extends PApplet {
     }
 
     public void mouseReleased() {
-        mouseIsReleased = true;
+        try {
+            mouseIsReleased = true;
+            if (triangleClicked != -1) {
+                if (triangleClicked > 24 && DrawUtil.selecteazaPiesaMancata()) {
+                    DrawUtil.punePiesaMancata();
+                } else if (DrawUtil.selecteazaPiesa()) {
+                    if(casaPlina && DrawUtil.aiZarBunPentruAScoate()) {
+                        DrawUtil.scoatePiesa(this);
+                    } else {
+                        DrawUtil.mutaPiesa();
+                    }
+                }
+                if (triangleClicked != -1) { // daca nu s-a modificat, s-a dat click in afara unui triunghi valid
+                    gameScreen.getBoard().getTriangles().get(triangleClicked).plusOnePiece();
+                    triangleClicked = -1;
+                    gameScreen.clearRedTriangles();
+                }
+            }
+        } catch (Exception ignored) {
+        }
     }
 }

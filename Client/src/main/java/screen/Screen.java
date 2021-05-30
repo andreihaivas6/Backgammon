@@ -2,6 +2,7 @@ package screen;
 
 import item.Button;
 import item.Item;
+import processing.Main;
 import processing.core.PApplet;
 import processing.core.PConstants;
 
@@ -26,6 +27,10 @@ public abstract class Screen {
 
     public void hoverButtons() {
         for (Item item : items) {
+            if(item instanceof Button && ((Button) item).getLabel().getText().equals("Press") &&
+                    (Main.wait || Main.diceRolled)) {
+                continue;
+            }
             item.show();
             if (item instanceof Button && ((Button) item).isHover()) {
                 hover = true;

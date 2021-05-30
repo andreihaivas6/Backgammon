@@ -2,6 +2,7 @@ package screen;
 
 import item.Item;
 import item.Triangle;
+import processing.Main;
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class Board {
     private PImage imgBackground;
     private final PApplet processing;
-    private final List<Item> triangles = new ArrayList<>();
+    private final List<Triangle> triangles = new ArrayList<>();
 
     public Board(PApplet processing) {
         this.processing = processing;
@@ -20,13 +21,14 @@ public class Board {
         initBoard();
     }
 
-    private void initBoard() {
+    public void initBoard() {
         triangles.clear();
 
+        triangles.add(new Triangle(processing, -1, -1, 0)); // sa coincida indicii din lista cu valoarea triunghiului
         int x = 885;
         for (int i = 1; i <= 12; i++) {
             x -= 70;
-            triangles.add(new Triangle(processing, x, 15, i));
+            triangles.add(new Triangle(processing, x, 685, i));
             if (i == 6) {
                 x -= 30;
             }
@@ -34,7 +36,7 @@ public class Board {
 
         x = 15;
         for (int i = 13; i <= 24; i++) {
-            triangles.add(new Triangle(processing, x, 685, i));
+            triangles.add(new Triangle(processing, x, 15, i));
             x += 70;
             if (i == 18) {
                 x += 30;
@@ -60,11 +62,25 @@ public class Board {
         }
     }
 
+    public void movePiece(int position1, int position2) {
+        getTriangleByValoare(position1).minusOnePiece();
+        getTriangleByValoare(position2).plusOnePieceEnemy();
+    }
+
+    public Triangle getTriangleByValoare(int valoare) {
+        for(Triangle triangle : triangles) {
+            if(triangle.getValoare() == valoare) {
+                return triangle;
+            }
+        }
+        return null;
+    }
+
     public PApplet getProcessing() {
         return processing;
     }
 
-    public List<Item> getTriangles() {
+    public List<Triangle> getTriangles() {
         return triangles;
     }
 }

@@ -23,6 +23,16 @@ public class Room {
 
     }
 
+    public String getMessage() {
+        String result = new String(message);
+        message = "wait";
+        return result;
+    }
+
+    public void changeTurn() {
+        turn = (turn + 1) % 2;
+    }
+
     public Board getBoard() {
         return board;
     }
@@ -71,10 +81,6 @@ public class Room {
         this.turn = turn;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
     public void setMessage(String message) {
         this.message = message;
     }
@@ -86,4 +92,5 @@ public class Room {
     public void setDiceRolled(boolean diceRolled) {
         this.diceRolled = diceRolled;
     }
+
 }
