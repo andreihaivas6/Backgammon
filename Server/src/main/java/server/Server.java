@@ -1,3 +1,8 @@
+package server;
+
+import logic.Game;
+import logic.User;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;

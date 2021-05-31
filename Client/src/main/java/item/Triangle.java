@@ -5,6 +5,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class Triangle extends Item {
     private int valoare; // 1 -> 24 si inca 2 pentru piesele mancate
@@ -244,5 +245,35 @@ public class Triangle extends Item {
 
     public void setRed(boolean red) {
         this.red = red;
+    }
+
+    @Override
+    public String toString() {
+        return "Triangle{" +
+                "processing=" + processing +
+                ", x=" + x +
+                ", y=" + y +
+                ", width=" + width +
+                ", height=" + height +
+                ", valoare=" + valoare +
+                ", indexPlayer=" + indexPlayer +
+                ", numberPieces=" + numberPieces +
+                ", red=" + red +
+                ", imgPieceWhite=" + imgPieceWhite +
+                ", imgPieceBlack=" + imgPieceBlack +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Triangle triangle = (Triangle) o;
+        return valoare == triangle.valoare && indexPlayer == triangle.indexPlayer && numberPieces == triangle.numberPieces && red == triangle.red && Objects.equals(imgPieceWhite, triangle.imgPieceWhite) && Objects.equals(imgPieceBlack, triangle.imgPieceBlack);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(valoare, indexPlayer, numberPieces, red, imgPieceWhite, imgPieceBlack);
     }
 }

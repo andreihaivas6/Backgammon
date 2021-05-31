@@ -1,3 +1,5 @@
+package logic;
+
 import java.net.Socket;
 
 public class User {

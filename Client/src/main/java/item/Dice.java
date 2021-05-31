@@ -4,6 +4,8 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Dice extends Item {
     private int valoare;
@@ -67,5 +69,20 @@ public class Dice extends Item {
 
     public void setDisponibil(int disponibil) {
         this.disponibil = disponibil;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Dice dice = (Dice) o;
+        return valoare == dice.valoare && disponibil == dice.disponibil && Arrays.equals(imgDice, dice.imgDice);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(valoare, disponibil);
+        result = 31 * result + Arrays.hashCode(imgDice);
+        return result;
     }
 }

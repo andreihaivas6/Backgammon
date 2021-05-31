@@ -27,7 +27,7 @@ public abstract class Screen {
 
     public void hoverButtons() {
         for (Item item : items) {
-            if(item instanceof Button && ((Button) item).getLabel().getText().equals("Press") &&
+            if (item instanceof Button && ((Button) item).getLabel().getText().equals("Press") &&
                     (Main.wait || Main.diceRolled)) {
                 continue;
             }

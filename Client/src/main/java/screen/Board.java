@@ -2,11 +2,9 @@ package screen;
 
 import item.Item;
 import item.Triangle;
-import processing.Main;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,8 +66,8 @@ public class Board {
     }
 
     public Triangle getTriangleByValoare(int valoare) {
-        for(Triangle triangle : triangles) {
-            if(triangle.getValoare() == valoare) {
+        for (Triangle triangle : triangles) {
+            if (triangle.getValoare() == valoare) {
                 return triangle;
             }
         }

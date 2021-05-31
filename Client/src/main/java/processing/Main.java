@@ -4,7 +4,6 @@ import item.Label;
 import processing.core.PApplet;
 import screen.GameScreen;
 import screen.MenuScreen;
-import screen.Screen;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -12,8 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
-import static java.lang.Thread.sleep;
 
 // mvn package
 // java -jar target/Client-1.0-SNAPSHOT.jar
@@ -44,8 +41,9 @@ public class Main extends PApplet {
     public static int currentScreen = 1, indexPlayer;
     public static boolean started = false, wait = true, diceRolled = false, casaPlina = false;
     public static boolean gameOver = false, winner = false;
+    public static boolean computerTurn = false, playVsComputer = false, vsComputeEasy = true;
     public static int triangleClicked = -1;
-    
+
     public static boolean exampleHome = false;
 
     public static void main(String[] args) {
@@ -71,15 +69,26 @@ public class Main extends PApplet {
             Draw.draw(this);
         } catch (Exception e) {
             System.err.println("No server listening... " + e);
+//            try {
+//                DrawUtil.schimbaJucatorDinRobotInOm();
+//            } catch (IOException | InterruptedException exception) {
+//                exception.printStackTrace();
+//            }
         }
     }
 
     public static String sendRequest(String request) throws IOException, InterruptedException {
-        System.out.println("Request: " + request);
+        if (Main.computerTurn) {
+            return "Robotu nu scrie la server.. esti neb";
+        }
+//        System.out.println("Request: " + request);
         out.println(request);
         String response = in.readLine();
-        System.out.println("Response: " + response);
-//        sleep(500);
+//        System.out.println("Response: " + response);
+        if(request.endsWith("end")) {
+            gameScreen.getDice1().setDisponibil(0);
+            gameScreen.getDice2().setDisponibil(0);
+        }
         return response;
     }
 
@@ -98,11 +107,14 @@ public class Main extends PApplet {
     public void mouseReleased() {
         try {
             mouseIsReleased = true;
+            if (computerTurn && playVsComputer) {
+                return;
+            }
             if (triangleClicked != -1) {
                 if (triangleClicked > 24 && DrawUtil.selecteazaPiesaMancata()) {
                     DrawUtil.punePiesaMancata();
                 } else if (DrawUtil.selecteazaPiesa()) {
-                    if(casaPlina && DrawUtil.aiZarBunPentruAScoate()) {
+                    if (casaPlina && DrawUtil.aiZarBunPentruAScoate()) {
                         DrawUtil.scoatePiesa(this);
                     } else {
                         DrawUtil.mutaPiesa();

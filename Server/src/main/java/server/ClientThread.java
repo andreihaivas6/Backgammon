@@ -1,3 +1,9 @@
+package server;
+
+import logic.Game;
+import logic.Room;
+import logic.User;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -49,13 +55,13 @@ class ClientThread extends Thread {
         }
 
         return switch (command) {
-            case "Join Room" -> joinRoom(arg);
-            case "Create Room" -> createRoom(arg);
+            case "Join logic.Room" -> joinRoom(arg);
+            case "Create logic.Room" -> createRoom(arg);
             case "PvC Easy" -> pvcEasy();
             case "PvC Hard" -> pvcHard();
             case "Exit" -> myExit();
             case "Quit" -> myQuit();
-            case "Game status" -> status(arg);
+            case "logic.Game status" -> status(arg);
             case "update" -> update(arg);
             default -> "Bad request";
         };
@@ -64,7 +70,7 @@ class ClientThread extends Thread {
     private String joinRoom(String code) {
         if(game.joinRoom(currentUser, code)) {
             currentRoom = game.getRoomWithUser(currentUser);
-            return "Joined Room";
+            return "Joined logic.Room";
         }
         return "Bad code";
     }
@@ -72,7 +78,7 @@ class ClientThread extends Thread {
     private String createRoom(String code) {
         if(game.createRoom(currentUser, code)) {
             currentRoom = game.getRoomWithUser(currentUser);
-            return "Created Room";
+            return "Created logic.Room";
         }
         return "Bad code";
     }

@@ -1,7 +1,8 @@
+package logic;
+
 public class Room {
     private String code;
 
-    private Board board;
     private User player1, player2;
     private String message;
 
@@ -31,14 +32,6 @@ public class Room {
 
     public void changeTurn() {
         turn = (turn + 1) % 2;
-    }
-
-    public Board getBoard() {
-        return board;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
     }
 
     public User getPlayer1() {

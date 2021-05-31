@@ -1,9 +1,10 @@
 package processing;
 
 import processing.core.PApplet;
-import screen.GameScreen;
 
 import java.io.IOException;
+
+import static java.lang.Thread.sleep;
 
 public class Draw {
     private static PApplet processing;
@@ -13,9 +14,9 @@ public class Draw {
         processing.background(Main.COLOR_BACKGROUND);
         processing.line(0, 0, processing.width, 0);
 
-        if(Main.gameOver) {
+        if (Main.gameOver) {
             processing.fill(0);
-            if(Main.winner) {
+            if (Main.winner) {
                 processing.text("You won!", 300, 300);
             } else {
                 processing.text("You lost!", 300, 300);
@@ -35,7 +36,7 @@ public class Draw {
         String buttonClicked = Main.menuScreen.getClicked();
         if (!buttonClicked.equals("")) {
             String request = buttonClicked + "/" + Main.request;
-            System.out.println(request);
+            //System.out.println(request);
 
             Main.out.println(request);
             Main.request = "";
@@ -46,10 +47,10 @@ public class Draw {
     }
 
     private static void takeActionInMenu(String response) {
-        System.out.println("R: " + response);
+        //System.out.println("R: " + response);
         switch (response) {
             case "exit":
-                System.exit(1);
+                //System.exit(1);
                 break;
             case "Bad code":
                 Main.info.setText(Main.response);
@@ -67,52 +68,80 @@ public class Draw {
                 Main.indexPlayer = 1;
                 Main.gameScreen.getBoard().initBoard();
                 break;
-//            default: // vs C
-//                Main.currentScreen = 2;
-//                Main.started = true;
-//                Main.wait = false;
-//                Main.indexPlayer = 0;
-//                break;
+            case "pvcEasy":
+                Main.currentScreen = 2;
+                Main.started = true;
+                Main.wait = false;
+                Main.indexPlayer = 0;
+                Main.gameScreen.getBoard().initBoard();
+                Main.vsComputeEasy = true;
+                Main.playVsComputer = true;
+                break;
+            case "pvcHard":
+                Main.currentScreen = 2;
+                Main.started = true;
+                Main.wait = false;
+                Main.indexPlayer = 0;
+                Main.gameScreen.getBoard().initBoard();
+                Main.vsComputeEasy = false;
+                Main.playVsComputer = true;
+                break;
+            default:
+                break;
         }
     }
 
     private static void game() throws IOException, InterruptedException {
         Main.gameScreen.show();
 
-        switch (Main.gameScreen.getClicked()) {
-            case "Quit" :
-                Main.out.println("Quit");
-                Main.request = "";
-                Main.response = Main.in.readLine();
-                Main.currentScreen = 1;
-                Main.started = false;
-                break;
-            case "Press":
-                if(!Main.diceRolled && !Main.wait) { //////////////////////////////////////////////////////////////////////// !!!Main.wait
-                    Main.gameScreen.rollDices();
-                    Main.diceRolled = true;
-                    Main.sendRequest("update/dice " + Main.gameScreen.getDice1().getValoare()
-                            + " " + Main.gameScreen.getDice2().getValoare());
+        if (Main.computerTurn) {
+            if (!Main.diceRolled) {
+                Main.diceRolled = true;
+                Main.gameScreen.rollDices();
+                Main.gameScreen.getDice1().show();
+                Main.gameScreen.getDice2().show();
+                if (!Main.casaPlina) {
+                    sleep(1000);
                 }
-                break;
-            default:
-                if(Main.wait) {
-                    String response = Main.sendRequest("Game status/" + Main.indexPlayer);
-                    manageResponse(response);
-                } else {
-                    gameLogic();
-                }
+                return;
+            }
+            DrawUtil.robotLogic();
+        } else {
+            switch (Main.gameScreen.getClicked()) {
+                case "Quit":
+                    Main.out.println("Quit");
+                    Main.request = "";
+                    Main.response = Main.in.readLine();
+                    Main.currentScreen = 1;
+                    Main.started = false;
+                    break;
+                case "Press":
+                    if (!Main.diceRolled && !Main.wait) { //////////////////////////////////////////////////////////////////////// !!!Main.wait
+                        Main.gameScreen.rollDices();
+                        Main.diceRolled = true;
+                        Main.sendRequest("update/dice " + Main.gameScreen.getDice1().getValoare()
+                                + " " + Main.gameScreen.getDice2().getValoare());
+                    }
+                    break;
+                default:
+                    if (Main.wait) {
+                        String response = Main.sendRequest("Game status/" + Main.indexPlayer);
+                        manageResponse(response);
+                    } else {
+                        gameLogic();
+                    }
+            }
         }
     }
 
     private static void gameLogic() throws IOException, InterruptedException { // player current
-        if(!Main.diceRolled) {
+        if (!Main.diceRolled) {
             return;
         }
         DrawUtil.init(Main.gameScreen, Main.gameScreen.getDice1().getValoare(),
                 Main.gameScreen.getDice2().getValoare(), Main.indexPlayer);
 
-        if(Main.triangleClicked != -1) {
+        if (Main.triangleClicked != -1) {
             if (Main.indexPlayer == 0) {
                 processing.image(Main.gameScreen.getBoard().getTriangles().get(0).getImgPieceWhite(),
                         processing.mouseX - 35, processing.mouseY - 35, 70, 70);
@@ -121,23 +150,26 @@ public class Draw {
                         processing.mouseX - 35, processing.mouseY - 35, 70, 70);
             }
         }
-        if(DrawUtil.aiPiesaMancata()) {
-            if(DrawUtil.aiLocSaPuiPiesaMancata()) {
-                if(DrawUtil.selecteazaPiesaMancata()) {;
+        if (DrawUtil.aiPiesaMancata()) {
+            if (DrawUtil.aiLocSaPuiPiesaMancata()) {
+                if (DrawUtil.selecteazaPiesaMancata()) {
+                    ;
 //                    DrawUtil.punePiesaMancata();
                 }
             } else {
                 DrawUtil.schimbaJucator();
             }
         } else { // nu ai piesa mancata
-            if(Main.casaPlina) { // incepi sa scoti
-                if(DrawUtil.aiZarBunPentruAScoate()) {
-                    if(DrawUtil.selecteazaPiesa()) {;
+            if (Main.casaPlina) { // incepi sa scoti
+                if (DrawUtil.aiZarBunPentruAScoate()) {
+                    if (DrawUtil.selecteazaPiesa()) {
+                        ;
 //                        DrawUtil.scoatePiesa();
                     }
                 } else {
-                    if(DrawUtil.potiMutaPiesa()) {
-                        if (DrawUtil.selecteazaPiesa()) {;
+                    if (DrawUtil.potiMutaPiesa()) {
+                        if (DrawUtil.selecteazaPiesa()) {
+                            ;
 //                            DrawUtil.mutaPiesa();
                         }
                     } else {
@@ -145,11 +177,12 @@ public class Draw {
                     }
                 }
             } else {
-                if(DrawUtil.potiMutaPiesa() /*&& Main.triangleClicked != -1*/) {
-                    if(DrawUtil.selecteazaPiesa()) {;
+                if (DrawUtil.potiMutaPiesa() /*&& Main.triangleClicked != -1*/) {
+                    if (DrawUtil.selecteazaPiesa()) {
+                        ;
 //                        DrawUtil.mutaPiesa();
                     }
-                }else {
+                } else {
                     DrawUtil.schimbaJucator();
                 }
             }
@@ -157,26 +190,28 @@ public class Draw {
     }
 
     private static void manageResponse(String response) {
-        if(response.equals("start")) {
-            Main.wait = false;
-            Main.diceRolled = false;
-        } else if(response.startsWith("dice ")) {
-            int valoare1 = Integer.parseInt(response.split(" ")[1]);
-            int valoare2 = Integer.parseInt(response.split(" ")[2]);
-            Main.gameScreen.getDice1().setValoare(valoare1);
-            Main.gameScreen.getDice2().setValoare(valoare2);
-            System.out.println("update la zar");
-        } else if(response.startsWith("move ")) {
-            int position1 = Integer.parseInt(response.split(" ")[1]);
-            int position2 = Integer.parseInt(response.split(" ")[2]);
-            Main.gameScreen.getBoard().movePiece(position1, position2);
-        } else if(response.startsWith("out ")) {
-            int position = Integer.parseInt(response.split(" ")[1]);
-            Main.gameScreen.getBoard().getTriangles().get(position).minusOnePiece();
-        } else if(response.equals("over")) {
-            Main.gameOver = true;
+        if (!Main.playVsComputer) {
+            if (response.equals("start")) {
+                Main.wait = false;
+                Main.diceRolled = false;
+            } else if (response.startsWith("dice ")) {
+                int valoare1 = Integer.parseInt(response.split(" ")[1]);
+                int valoare2 = Integer.parseInt(response.split(" ")[2]);
+                Main.gameScreen.getDice1().setValoare(valoare1);
+                Main.gameScreen.getDice2().setValoare(valoare2);
+                //System.out.println("update la zar");
+            } else if (response.startsWith("move ")) {
+                int position1 = Integer.parseInt(response.split(" ")[1]);
+                int position2 = Integer.parseInt(response.split(" ")[2]);
+                Main.gameScreen.getBoard().movePiece(position1, position2);
+            } else if (response.startsWith("out ")) {
+                int position = Integer.parseInt(response.split(" ")[1]);
+                Main.gameScreen.getBoard().getTriangles().get(position).minusOnePiece();
+            } else if (response.equals("over")) {
+                Main.gameOver = true;
+            }
         }
-        if(response.endsWith("end")) {
+        if (response.endsWith("end")) {
             Main.wait = false;
             Main.diceRolled = false;
         }
