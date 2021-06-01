@@ -7,6 +7,7 @@ public class MenuScreen extends Screen {
         super(processing);
     }
 
+    @Override
     public void show() {
         hover = false;
         hoverButtons();

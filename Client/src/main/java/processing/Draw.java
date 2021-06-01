@@ -1,6 +1,7 @@
 package processing;
 
 import processing.core.PApplet;
+import processing.util.DrawUtil;
 
 import java.io.IOException;
 
@@ -23,9 +24,51 @@ public class Draw {
             }
         } else {
             switch (Main.currentScreen) {
+                case 0 -> login();
                 case 1 -> menu();
                 case 2 -> game();
             }
+        }
+    }
+
+    private static void login() throws IOException {
+        Main.loginScreen.show();
+        processing.fill(255);
+        processing.rect(365, 220, 200, 80);
+        processing.line(365 , 260, 365 + 200 , 260);
+        processing.fill(0);
+        processing.text(Main.request, 380, 250);
+
+        String buttonClicked = Main.loginScreen.getClicked();
+        if (!buttonClicked.equals("")) {
+            String request = buttonClicked + "/" + Main.request.split("\n")[0] + "#" + Main.request.split("\n")[1];
+//            System.out.println(request);
+
+            Main.out.println(request);
+            Main.request = "";
+
+            Main.response = Main.in.readLine();
+            takeActionInLogin(Main.response);
+        }
+    }
+
+    private static void takeActionInLogin(String response) {
+        switch (response) {
+            case "exit":
+                System.exit(1);
+            case "log in":
+                Main.currentScreen = 1;
+                Main.request = "";
+                break;
+            case "new user created":
+                Main.infoLogin.setText("Account created succesfully");
+                break;
+            case "not logged in":
+                Main.infoLogin.setText("Bad account credentials");
+                break;
+            case "Account exists":
+                Main.infoLogin.setText("Username already exists");
+                break;
         }
     }
 
@@ -36,7 +79,7 @@ public class Draw {
         String buttonClicked = Main.menuScreen.getClicked();
         if (!buttonClicked.equals("")) {
             String request = buttonClicked + "/" + Main.request;
-            //System.out.println(request);
+//            System.out.println("aici: " + request);
 
             Main.out.println(request);
             Main.request = "";
@@ -50,7 +93,7 @@ public class Draw {
         //System.out.println("R: " + response);
         switch (response) {
             case "exit":
-                //System.exit(1);
+                System.exit(1);
                 break;
             case "Bad code":
                 Main.info.setText(Main.response);

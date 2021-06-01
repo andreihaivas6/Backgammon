@@ -1,6 +1,6 @@
 package screen;
 
-import item.Button;
+import item.menu.Button;
 import item.Item;
 import processing.Main;
 import processing.core.PApplet;

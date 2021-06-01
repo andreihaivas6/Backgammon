@@ -1,5 +1,6 @@
-package item;
+package item.board;
 
+import item.Item;
 import processing.core.PApplet;
 import processing.core.PImage;
 

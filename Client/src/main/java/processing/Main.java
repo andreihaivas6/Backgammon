@@ -1,8 +1,10 @@
 package processing;
 
-import item.Label;
+import item.menu.Label;
 import processing.core.PApplet;
+import processing.util.DrawUtil;
 import screen.GameScreen;
+import screen.LoginScreen;
 import screen.MenuScreen;
 
 import java.awt.*;
@@ -25,7 +27,7 @@ public class Main extends PApplet {
     public static Socket socket;
     public static PrintWriter out;
     public static BufferedReader in;
-    public static String request = "";
+    public static String request = "", account;
     public static String response;
 
     public static boolean mouseIsPressed = false, mouseIsReleased = false, mouseIsHold = false;
@@ -36,14 +38,16 @@ public class Main extends PApplet {
 
     public static GameScreen gameScreen;
     public static MenuScreen menuScreen;
-    public static Label info;
+    public static LoginScreen loginScreen;
+    public static Label info, infoLogin;
 
-    public static int currentScreen = 1, indexPlayer;
+    public static int indexPlayer;
     public static boolean started = false, wait = true, diceRolled = false, casaPlina = false;
     public static boolean gameOver = false, winner = false;
     public static boolean computerTurn = false, playVsComputer = false, vsComputeEasy = true;
     public static int triangleClicked = -1;
 
+    public static int currentScreen = 0;
     public static boolean exampleHome = false;
 
     public static void main(String[] args) {
@@ -97,6 +101,8 @@ public class Main extends PApplet {
             request = request.substring(0, request.length() - 1);
         } else if ((key >= 'a' && key <= 'z') || (key >= 'A' && key <= 'Z') || (key >= '0' && key <= '9')) {
             request = request + key;
+        } else if (key == ENTER) {
+            request += '\n';
         }
     }
 

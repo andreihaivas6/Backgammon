@@ -1,3 +1,9 @@
+item\menu\Label.class
 processing\Main.class
-processing\MutareRobot.class
+item\menu\TextBox.class
+processing\util\DrawUtil.class
+processing\util\MutareRobot.class
+item\board\Dice.class
+item\board\Triangle.class
+item\menu\Button.class
 processing\Draw.class

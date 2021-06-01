@@ -1,7 +1,8 @@
-package processing;
+package processing.util;
 
-import item.Dice;
-import item.Triangle;
+import item.board.Dice;
+import item.board.Triangle;
+import processing.Main;
 import screen.GameScreen;
 
 import java.util.List;

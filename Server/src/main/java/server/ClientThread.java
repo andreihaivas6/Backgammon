@@ -1,5 +1,6 @@
 package server;
 
+import database.UserDAO;
 import logic.Game;
 import logic.Room;
 import logic.User;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.SQLException;
 
 class ClientThread extends Thread {
     private Game game;
@@ -36,7 +38,7 @@ class ClientThread extends Thread {
                 out.flush();
 
             }while (true);
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             System.err.println("Communication error... " + e);
         } finally {
             try {
@@ -47,7 +49,7 @@ class ClientThread extends Thread {
         }
     }
 
-    private String getResponse(String request) {
+    private String getResponse(String request) throws SQLException {
         String command = request.split("/")[0];
         String arg = "";
         if(request.split("/").length > 1) {
@@ -55,22 +57,50 @@ class ClientThread extends Thread {
         }
 
         return switch (command) {
-            case "Join logic.Room" -> joinRoom(arg);
-            case "Create logic.Room" -> createRoom(arg);
+            case "Log In" -> logIn(arg);
+            case "Sign Up" -> signUp(arg);
+            case "Join Room" -> joinRoom(arg);
+            case "Create Room" -> createRoom(arg);
             case "PvC Easy" -> pvcEasy();
             case "PvC Hard" -> pvcHard();
             case "Exit" -> myExit();
             case "Quit" -> myQuit();
-            case "logic.Game status" -> status(arg);
+            case "Game status" -> status(arg);
             case "update" -> update(arg);
             default -> "Bad request";
         };
     }
 
+    private String logIn(String arg) throws SQLException {
+        String username = arg.split("#")[0];
+        String password = arg.split("#")[1];
+        UserDAO userDAO = new UserDAO();
+
+        if(userDAO.usernameExists(username) && userDAO.accountExists(new User(username, password))) {
+            return "log in";
+        } else {
+            return "not logged in";
+        }
+    }
+
+    private String signUp(String arg) throws SQLException {
+        System.out.println(arg);
+        String username = arg.split("#")[0];
+        String password = arg.split("#")[1];
+        UserDAO userDAO = new UserDAO();
+        try {
+            userDAO.insertUser(new User(username, password));
+            return "new user created";
+        } catch (Exception e) {
+            return "Account exists";
+        }
+
+    }
+
     private String joinRoom(String code) {
         if(game.joinRoom(currentUser, code)) {
             currentRoom = game.getRoomWithUser(currentUser);
-            return "Joined logic.Room";
+            return "Joined Room";
         }
         return "Bad code";
     }
@@ -78,7 +108,7 @@ class ClientThread extends Thread {
     private String createRoom(String code) {
         if(game.createRoom(currentUser, code)) {
             currentRoom = game.getRoomWithUser(currentUser);
-            return "Created logic.Room";
+            return "Created Room";
         }
         return "Bad code";
     }

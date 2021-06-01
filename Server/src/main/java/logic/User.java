@@ -1,12 +1,16 @@
 package logic;
 
+import javax.persistence.*;
 import java.net.Socket;
 
 public class User {
     private int index; // 0, 1: daca e primul sau al doilea jucator din camera pentru a putea juca in ordine
     private boolean loggedIn = false;
 
+    private Long id;
     private String username;
+    private String password;
+
     private Socket socket;
 
     public User(Socket socket) {
@@ -16,6 +20,15 @@ public class User {
     public User(String username, Socket socket) {
         this.username = username;
         this.socket = socket;
+    }
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public User() {
+
     }
 
     public int getIndex() {
@@ -48,5 +61,21 @@ public class User {
 
     public void setSocket(Socket socket) {
         this.socket = socket;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

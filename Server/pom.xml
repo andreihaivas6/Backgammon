@@ -20,6 +20,12 @@
             <artifactId>mariadb-java-client</artifactId>
             <version>2.7.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>2.4.2</version>
+        </dependency>
 
     </dependencies>
 

@@ -1,5 +1,6 @@
-package item;
+package item.menu;
 
+import item.Item;
 import processing.Main;
 import processing.core.PApplet;
 

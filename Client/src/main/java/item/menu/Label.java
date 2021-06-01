@@ -1,5 +1,6 @@
-package item;
+package item.menu;
 
+import item.Item;
 import processing.core.PApplet;
 
 public class Label extends Item {
@@ -8,7 +9,7 @@ public class Label extends Item {
     @Override
     public void show() {
         processing.fill(0);
-        if(text.equals("Backgammon")) {
+        if(text.equals("Backgammon") || text.equals("Login/Sign Up")) {
             processing.textSize(32);
         } else {
             processing.textSize(22);

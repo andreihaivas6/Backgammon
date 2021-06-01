@@ -1,10 +1,11 @@
 package processing;
 
-import item.Button;
-import item.Label;
-import item.TextBox;
+import item.menu.Button;
+import item.menu.Label;
+import item.menu.TextBox;
 import processing.core.PApplet;
 import screen.GameScreen;
+import screen.LoginScreen;
 import screen.MenuScreen;
 
 public class Setup {
@@ -25,5 +26,15 @@ public class Setup {
         Main.gameScreen = new GameScreen(processing);
         Main.gameScreen.addItem(new Button(processing, 405,  660, 80, 50, "Quit"));
         Main.gameScreen.addItem(new Button(processing, 305,  325, 90, 50, "Press"));
+
+        Main.loginScreen = new LoginScreen(processing);
+        Main.loginScreen.addItem(new Label(processing, 330, 60, 200, 100, "Login/Sign Up"));
+        Main.loginScreen.addItem(new Label(processing, 200, 215, 400, 100, "username: "));
+        Main.loginScreen.addItem(new Label(processing, 200, 260, 400, 100, "password: "));
+        Main.loginScreen.addItem(new Button(processing, 400,  420, 110, 50, "Log In"));
+        Main.loginScreen.addItem(new Button(processing, 390,  500, 130, 50, "Sign Up"));
+        Main.loginScreen.addItem(new Button(processing, 415,  580, 80, 50, "Exit"));
+        Main.loginScreen.addItem(Main.infoLogin = new Label(processing, 310, 360, 200, 100, " "));
+
     }
 }

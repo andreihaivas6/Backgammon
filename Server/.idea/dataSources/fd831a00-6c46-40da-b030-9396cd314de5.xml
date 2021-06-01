@@ -1060,5 +1060,65 @@
       <ObjectGrants>ALL PRIVILEGES!
 </ObjectGrants>
     </user>
+    <table id="337" parent="2" name="iduser"/>
+    <table id="338" parent="2" name="users"/>
+    <column id="339" parent="337" name="next_not_cached_value">
+      <Position>1</Position>
+      <DataType>bigint(21)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="340" parent="337" name="minimum_value">
+      <Position>2</Position>
+      <DataType>bigint(21)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="341" parent="337" name="maximum_value">
+      <Position>3</Position>
+      <DataType>bigint(21)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="342" parent="337" name="start_value">
+      <Position>4</Position>
+      <Comment>start value when sequences is created or value if RESTART is used</Comment>
+      <DataType>bigint(21)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="343" parent="337" name="increment">
+      <Position>5</Position>
+      <Comment>increment value</Comment>
+      <DataType>bigint(21)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="344" parent="337" name="cache_size">
+      <Position>6</Position>
+      <DataType>bigint(21) unsigned|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="345" parent="337" name="cycle_option">
+      <Position>7</Position>
+      <Comment>0 if no cycles are allowed, 1 if the sequence should begin a new cycle when maximum_value is passed</Comment>
+      <DataType>tinyint(1) unsigned|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="346" parent="337" name="cycle_count">
+      <Position>8</Position>
+      <Comment>How many cycles have been done</Comment>
+      <DataType>bigint(21)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="347" parent="338" name="username">
+      <Position>1</Position>
+      <DataType>varchar(100)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="348" parent="338" name="password">
+      <Position>2</Position>
+      <DataType>varchar(100)|0s</DataType>
+    </column>
+    <key id="349" parent="338" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>username</ColNames>
+      <Primary>1</Primary>
+    </key>
   </database-model>
 </dataSource>

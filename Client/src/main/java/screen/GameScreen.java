@@ -1,8 +1,8 @@
 package screen;
 
-import item.Dice;
-import item.Triangle;
-import processing.DrawUtil;
+import item.board.Dice;
+import item.board.Triangle;
+import processing.util.DrawUtil;
 import processing.Main;
 import processing.core.PApplet;
 
@@ -50,13 +50,13 @@ public class GameScreen extends Screen {
 
     public void redTriangles() {
         if (Main.indexPlayer == 0) {
-            int val = Main.triangleClicked - dice1.getValoare();
-            if (val >= 1 && val <= 24 && DrawUtil.mutareZarOk(dice1, val)) {
-                board.getTriangles().get(val).setRed(true);
+            int value = Main.triangleClicked - dice1.getValoare();
+            if (value >= 1 && value <= 24 && DrawUtil.mutareZarOk(dice1, value)) {
+                board.getTriangles().get(value).setRed(true);
             }
-            val = Main.triangleClicked - dice2.getValoare();
-            if (val >= 1 && val <= 24 && DrawUtil.mutareZarOk(dice2, val)) {
-                board.getTriangles().get(val).setRed(true);
+            value = Main.triangleClicked - dice2.getValoare();
+            if (value >= 1 && value <= 24 && DrawUtil.mutareZarOk(dice2, value)) {
+                board.getTriangles().get(value).setRed(true);
             }
         } else {
             int val = Main.triangleClicked + dice1.getValoare();
@@ -76,14 +76,14 @@ public class GameScreen extends Screen {
     }
 
     private void triangleRedWithDice(Dice dice2) {
-        int val;
+        int value;
         if (Main.indexPlayer == 0) {
-            val = 24 - dice2.getValoare() + 1;
+            value = 24 - dice2.getValoare() + 1;
         } else {
-            val = dice2.getValoare();
+            value = dice2.getValoare();
         }
         if (dice2.getDisponibil() > 0) {
-            Triangle triangle = board.getTriangleByValoare(val);
+            Triangle triangle = board.getTriangleByValoare(value);
             if (triangle.getIndexPlayer() == Main.indexPlayer || triangle.getIndexPlayer() == -1 ||
                     (triangle.getIndexPlayer() == (Main.indexPlayer + 1) % 2 && triangle.getNumberPieces() == 1)) {
                 triangle.setRed(true);

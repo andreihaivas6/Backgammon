@@ -1,7 +1,7 @@
 package screen;
 
 import item.Item;
-import item.Triangle;
+import item.board.Triangle;
 import processing.core.PApplet;
 import processing.core.PImage;
 
