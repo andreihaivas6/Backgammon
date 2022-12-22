@@ -27,6 +27,6 @@ Also, the client provides an <b>Algorithm</b> in order to let the robot decide w
  - make moves so as not to leave positions with a single piece
  - etc.
 
-
+<img src="https://github.com/andreihaivas6/Tables/blob/main/Table/q1.png">
 
 
